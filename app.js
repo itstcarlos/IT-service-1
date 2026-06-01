@@ -11,7 +11,7 @@ const STATE = {
     fullname: 'แอดมินบอย (System Admin)',
     department: 'ไอที (IT Support)',
     phone: '1134',
-    role: 'admin' // 'user' or 'admin'
+    role: 'admin'
   },
   tasks: [],
   users: [], // Preset and custom users loaded dynamically
@@ -21,7 +21,10 @@ const STATE = {
 
 // Default Users for Simulation Role Switcher
 const DEFAULT_USERS = [
-  { username: 'admin_boy', fullname: 'แอดมินบอย (System Admin)', department: 'ไอที (IT Support)', phone: '1134', role: 'admin' }
+  { username: 'admin_boy', fullname: 'แอดมินบอย (System Admin)', department: 'ไอที (IT Support)', phone: '1134', role: 'admin' },
+  { username: 'somchai', fullname: 'สมชาย ใจดี', department: 'ฝ่ายขาย (Sales)', phone: '081-234-5678', role: 'user' },
+  { username: 'wipa', fullname: 'วิภา หอมขจร', department: 'บัญชี (Account)', phone: '082-345-6789', role: 'user' },
+  { username: 'kitti', fullname: 'กิตติ รักเรียน', department: 'ฝ่ายบุคคล (HR)', phone: '083-456-7890', role: 'user' }
 ];
 
 // Default Mock Data for local fallback
