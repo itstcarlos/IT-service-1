@@ -23,7 +23,7 @@ const STATE = {
 const DEFAULT_USERS = [
   { username: 'somchai', fullname: 'สมชาย ใจดี', department: 'ฝ่ายขาย (Sales)', phone: '081-234-5678', role: 'user' },
   { username: 'wipa', fullname: 'วิภา หอมขจร', department: 'บัญชี (Account)', phone: '082-345-6789', role: 'user' },
-  { username: 'kitti', fullname: 'กิตติ รักเรียน', department: 'ฝ่ายบุคคล (HR)', phone: '083-456-7890', role: 'user' },
+  { username: 'sittipol', fullname: 'สิทธิพล มีสวนนิล', department: 'IT', phone: '1143', role: 'admin' },
   { username: 'admin_boy', fullname: 'แอดมินบอย (System Admin)', department: 'ไอที (IT Support)', phone: '089-999-9999', role: 'admin' }
 ];
 
