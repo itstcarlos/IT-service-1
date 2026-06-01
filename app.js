@@ -8,7 +8,7 @@
 const STATE = {
   currentUser: {
     username: 'admin_boy',
-    fullname: 'แอดมินบอย (System Admin),
+    fullname: 'แอดมินบอย (System Admin)',
     department: 'ไอที (IT Support)',
     phone: '1134',
     role: 'admin' // 'user' or 'admin'
