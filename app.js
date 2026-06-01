@@ -14,12 +14,13 @@ const STATE = {
     role: 'user' // 'user' or 'admin'
   },
   tasks: [],
+  users: [], // Preset and custom users loaded dynamically
   activeFilter: 'All',
   isCloudMode: false // Automatically determined below
 };
 
-// Preset Users for Simulation Role Switcher
-const PRESET_USERS = [
+// Default Users for Simulation Role Switcher
+const DEFAULT_USERS = [
   { username: 'somchai', fullname: 'สมชาย ใจดี', department: 'ฝ่ายขาย (Sales)', phone: '081-234-5678', role: 'user' },
   { username: 'wipa', fullname: 'วิภา หอมขจร', department: 'บัญชี (Account)', phone: '082-345-6789', role: 'user' },
   { username: 'kitti', fullname: 'กิตติ รักเรียน', department: 'ฝ่ายบุคคล (HR)', phone: '083-456-7890', role: 'user' },
@@ -125,6 +126,20 @@ const DB = {
           STATE.tasks = [...MOCK_TASKS];
           localStorage.setItem('repair_tasks', JSON.stringify(MOCK_TASKS));
         }
+      }
+    }
+
+    // Load Users list dynamically
+    const storedUsers = localStorage.getItem('preset_users');
+    if (!storedUsers) {
+      localStorage.setItem('preset_users', JSON.stringify(DEFAULT_USERS));
+      STATE.users = [...DEFAULT_USERS];
+    } else {
+      try {
+        STATE.users = JSON.parse(storedUsers);
+      } catch (e) {
+        STATE.users = [...DEFAULT_USERS];
+        localStorage.setItem('preset_users', JSON.stringify(DEFAULT_USERS));
       }
     }
   },
@@ -337,11 +352,20 @@ const UI = {
     
     // Modal Save Button
     this.saveModalBtn = document.getElementById('saveModalBtn');
+
+    // User Management Modal Elements
+    this.userListContainer = document.getElementById('userListContainer');
+    this.addUserForm = document.getElementById('addUserForm');
+    this.addUsername = document.getElementById('addUsername');
+    this.addRole = document.getElementById('addRole');
+    this.addFullname = document.getElementById('addFullname');
+    this.addDept = document.getElementById('addDept');
+    this.addPhone = document.getElementById('addPhone');
   },
 
   initRoleSwitcher() {
     this.roleSelector.innerHTML = '';
-    PRESET_USERS.forEach(user => {
+    STATE.users.forEach(user => {
       const opt = document.createElement('option');
       opt.value = user.username;
       opt.textContent = `${user.fullname} (${user.role === 'admin' ? 'แอดมิน' : user.department})`;
@@ -461,7 +485,7 @@ const UI = {
   },
 
   async switchRole(username) {
-    const user = PRESET_USERS.find(u => u.username === username);
+    const user = STATE.users.find(u => u.username === username);
     if (!user) return;
     
     STATE.currentUser = { ...user };
@@ -1017,6 +1041,98 @@ const UI = {
     };
     reader.readAsText(file);
     event.target.value = '';
+  },
+
+  // User Management Modal handlers
+  openUserModal() {
+    this.renderUserList();
+    document.getElementById('userModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+  },
+
+  closeUserModal() {
+    document.getElementById('userModal').classList.remove('active');
+    document.body.style.overflow = 'auto';
+  },
+
+  renderUserList() {
+    this.userListContainer.innerHTML = '';
+    STATE.users.forEach(user => {
+      const row = document.createElement('div');
+      row.style.display = 'flex';
+      row.style.justify = 'space-between';
+      row.style.alignItems = 'center';
+      row.style.padding = '8px 0';
+      row.style.borderBottom = '1px solid rgba(255,255,255,0.05)';
+      row.style.fontSize = '0.85rem';
+      
+      const roleBadge = user.role === 'admin' 
+        ? '<span style="color:#a5b4fc; background:rgba(99,102,241,0.2); padding:2px 8px; border-radius:50px; font-size:0.7rem; margin-left:6px; font-weight:600;">🛡️ แอดมิน</span>' 
+        : `<span style="color:var(--text-secondary); font-size:0.75rem; margin-left:6px;">(${user.department})</span>`;
+
+      // Prevent deleting the default core users to ensure safety
+      const isDefault = user.username === 'admin_boy' || user.username === 'somchai';
+      const deleteBtn = isDefault 
+        ? '<span style="color:var(--text-muted); font-size:0.7rem;">(ระบบหลัก - ลบไม่ได้)</span>' 
+        : `<button class="file-action-btn" style="background:rgba(239,68,68,0.15); color:#f87171; border-color:rgba(239,68,68,0.3); padding:4px 8px;" onclick="UI.handleDeleteUser('${user.username}')">🗑️ ลบผู้ใช้</button>`;
+
+      row.innerHTML = `
+        <div>
+          <strong style="color:var(--text-main); font-weight:500;">${user.fullname}</strong> <span style="font-family:monospace; color:var(--text-muted);">@${user.username}</span>
+          ${roleBadge}
+        </div>
+        ${deleteBtn}
+      `;
+      this.userListContainer.appendChild(row);
+    });
+  },
+
+  async handleAddUser(event) {
+    event.preventDefault();
+    const username = this.addUsername.value.trim().toLowerCase();
+    const fullname = this.addFullname.value.trim();
+    const role = this.addRole.value;
+    const department = this.addDept.value.trim();
+    const phone = this.addPhone.value.trim();
+
+    // Check for duplicates
+    if (STATE.users.some(u => u.username === username)) {
+      alert('⚠️ Username นี้ถูกใช้งานแล้วในระบบจำลอง โปรดระบุชื่ออื่นครับ');
+      return;
+    }
+
+    const newUser = { username, fullname, role, department, phone };
+    STATE.users.push(newUser);
+    localStorage.setItem('preset_users', JSON.stringify(STATE.users));
+
+    // Reset and render
+    this.addUserForm.reset();
+    this.initRoleSwitcher();
+    this.renderUserList();
+    
+    // Auto-login to new user
+    this.roleSelector.value = username;
+    await this.switchRole(username);
+
+    alert(`🎉 เพิ่มบัญชี @${username} สำเร็จ! และได้ล็อกอินสลับบัญชีให้คุณแล้วครับ`);
+  },
+
+  async handleDeleteUser(username) {
+    if (!confirm(`คุณแน่ใจหรือไม่ว่าต้องการลบผู้ใช้จำลอง @${username} ออกจากเบราว์เซอร์นี้?`)) return;
+
+    STATE.users = STATE.users.filter(u => u.username !== username);
+    localStorage.setItem('preset_users', JSON.stringify(STATE.users));
+
+    this.initRoleSwitcher();
+    this.renderUserList();
+
+    // If active user was deleted, fallback to somchai
+    if (STATE.currentUser.username === username) {
+      this.roleSelector.value = 'somchai';
+      await this.switchRole('somchai');
+    }
+    
+    alert(`🗑️ ลบบัญชีผู้ใช้ @${username} เรียบร้อยแล้ว`);
   }
 };
 

@@ -105,6 +105,11 @@
               📥 นำเข้าฐานข้อมูล
               <input type="file" id="dbImportFile" style="display:none;" accept=".json" onchange="UI.importDatabase(event)">
             </label>
+
+            <!-- User Management Button -->
+            <button class="btn-utility" onclick="UI.openUserModal()" title="จัดการบัญชีผู้ใช้งานจำลองในระบบ">
+              👥 จัดการผู้ใช้
+            </button>
           </div>
         </div>
 
@@ -434,6 +439,79 @@
         <button class="btn-primary" id="saveModalBtn" style="width: auto; margin-top: 0; padding: 10px 24px;">
           💾 บันทึกความเปลี่ยนแปลง
         </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============================================== -->
+  <!-- MODAL: USER MANAGEMENT DIALOG -->
+  <!-- ============================================== -->
+  <div class="modal-overlay" id="userModal">
+    <div class="modal-card" style="max-width: 600px;">
+      
+      <!-- Header -->
+      <div class="modal-header">
+        <h3>👥 จัดการบัญชีผู้ใช้จำลอง (User Management)</h3>
+        <button class="close-btn" onclick="UI.closeUserModal()">&times;</button>
+      </div>
+      
+      <!-- Body -->
+      <div class="modal-body" style="grid-template-columns: 1fr; gap: 20px;">
+        
+        <!-- User list -->
+        <div>
+          <h4 class="modal-section-title">รายชื่อผู้ใช้ปัจจุบัน (ในเบราว์เซอร์นี้)</h4>
+          <div id="userListContainer" style="max-height: 180px; overflow-y: auto; margin-top: 8px; background: rgba(0, 0, 0, 0.2); border: 1px solid var(--border-color); border-radius: 8px; padding: 10px;">
+            <!-- JS will inject user list items here -->
+          </div>
+        </div>
+
+        <!-- Add form -->
+        <div>
+          <h4 class="modal-section-title">➕ เพิ่มบัญชีผู้ใช้ / แอดมินใหม่</h4>
+          <form id="addUserForm" onsubmit="UI.handleAddUser(event)" style="margin-top: 8px;">
+            <div class="form-group-row">
+              <div class="form-group">
+                <label class="form-label" for="addUsername">Username (ภาษาอังกฤษเท่านั้น)</label>
+                <input type="text" id="addUsername" class="form-control" placeholder="เช่น malee, admin_nan" required pattern="^[a-zA-Z0-9_]+$">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="addRole">บทบาท (Role)</label>
+                <select id="addRole" class="form-control" required>
+                  <option value="user">User (ผู้แจ้งซ่อม)</option>
+                  <option value="admin">Admin (แอดมิน)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="addFullname">ชื่อ - นามสกุลจริง</label>
+              <input type="text" id="addFullname" class="form-control" placeholder="เช่น มาลี รักเรียน" required>
+            </div>
+
+            <div class="form-group-row">
+              <div class="form-group">
+                <label class="form-label" for="addDept">แผนก / ฝ่าย</label>
+                <input type="text" id="addDept" class="form-control" placeholder="เช่น ฝ่ายบุคคล, บัญชี" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="addPhone">เบอร์โทรศัพท์</label>
+                <input type="tel" id="addPhone" class="form-control" placeholder="เช่น 08x-xxxxxxx" required>
+              </div>
+            </div>
+
+            <button type="submit" class="btn-primary" style="margin-top: 10px; width: auto; padding: 10px 24px; float: right;">
+              💾 บันทึกผู้ใช้ใหม่
+            </button>
+          </form>
+        </div>
+
+      </div>
+
+      <!-- Footer -->
+      <div class="modal-footer">
+        <button class="btn-secondary" onclick="UI.closeUserModal()">ปิดหน้าต่าง</button>
       </div>
 
     </div>
