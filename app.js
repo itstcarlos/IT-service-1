@@ -7,11 +7,11 @@
 // Global Application State
 const STATE = {
   currentUser: {
-    username: 'somchai',
-    fullname: 'สมชาย ใจดี',
-    department: 'ฝ่ายขาย (Sales)',
-    phone: '081-234-5678',
-    role: 'user' // 'user' or 'admin'
+    username: 'admin_boy',
+    fullname: 'แอดมินบอย (System Admin),
+    department: 'ไอที (IT Support)',
+    phone: '1134',
+    role: 'admin' // 'user' or 'admin'
   },
   tasks: [],
   users: [], // Preset and custom users loaded dynamically
@@ -24,7 +24,7 @@ const DEFAULT_USERS = [
   { username: 'somchai', fullname: 'สมชาย ใจดี', department: 'ฝ่ายขาย (Sales)', phone: '081-234-5678', role: 'user' },
   { username: 'wipa', fullname: 'วิภา หอมขจร', department: 'บัญชี (Account)', phone: '082-345-6789', role: 'user' },
   { username: 'sittipol', fullname: 'สิทธิพล มีสวนนิล', department: 'IT', phone: '1143', role: 'admin' },
-  { username: 'admin_boy', fullname: 'แอดมินบอย (System Admin)', department: 'ไอที (IT Support)', phone: '089-999-9999', role: 'admin' }
+  { username: 'admin_boy', fullname: 'แอดมินบอย (System Admin)', department: 'ไอที (IT Support)', phone: '1134', role: 'admin' }
 ];
 
 // Default Mock Data for local fallback
